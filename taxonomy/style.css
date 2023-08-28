@@ -1,0 +1,42 @@
+.tax-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Ubuntu';
+    line-height: normal;
+}
+
+/* Style for the thumbnail container */
+.tax-item {
+    display: inline-block;
+    margin-right: 4px;
+    overflow: hidden;
+    width: 32%;
+}
+
+.tax-item > a {
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Style for the thumbnail image */
+.tax-thumbnail {
+    display: flex;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+.tax-thumbnail > img {
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Hover effect on the thumbnail */
+.tax-item:hover .tax-thumbnail img {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
