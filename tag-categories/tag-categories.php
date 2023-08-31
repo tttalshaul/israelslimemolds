@@ -56,6 +56,7 @@ function display_tag_categories_by_parent_shortcode($atts) {
         if ($tag_categories && !is_wp_error($tag_categories)) {
             // Organize terms by their parent terms
             $term_groups = array();
+            $term_group_parents = array();
             foreach ($tag_categories as $tag_category) {
                 if ($tag_category->parent === 0) {
                     $parent_term = $tag_category;
@@ -66,35 +67,47 @@ function display_tag_categories_by_parent_shortcode($atts) {
                     }
                 }
 
+                $group_parent_term = get_term($parent_term->parent, 'tag_category');
+                if (!isset($term_group_parents[$group_parent_term->name])) {
+                    $term_group_parents[$group_parent_term->name] = array(
+                        'parent' => array(),
+                        'children' => array(),
+                    );
+                }
+
                 if (!isset($term_groups[$parent_term->name])) {
                     $term_groups[$parent_term->name] = array(
                         'parent' => $parent_term,
                         'children' => array(),
                     );
+                    $term_group_parents[$group_parent_term->name]['children'][] = &$term_groups[$parent_term->name];
+                    $term_group_parents[$group_parent_term->name]['parent'][] = $parent_term->name;
                 }
-
                 $term_groups[$parent_term->name]['children'][] = $tag_category;
             }
 
             // Output the organized term groups
             $output = '<div class="tag-categories">';
-            ksort($term_groups);
-            foreach ($term_groups as $term_group) {
-                $output .= '<div class="tag-category">';
-                $output .= '<div class="tag-category-parent">' . $term_group['parent']->name . '</div>';
-            
-                foreach ($term_group['children'] as $child_index => $child_term) {
-                    $arrow = "";
-                    if (is_numeric($child_term->name)) {
-                        $child_term = get_term($child_term->parent, 'tag_category');
-                        if ($child_index !== array_key_last($term_group['children'])) {
-                            $arrow = "<div class='tag-category-arrow'>◂</div>";
-                        }
-                    }
-                    $output .= '<div class="tag-category-child">' . $child_term->name . '</div>' . $arrow;
-                }
+            foreach ($term_group_parents as $term_group) {
+                array_multisort($term_group['parent'], $term_group['children']);
+                ksort($term_group);
+                foreach ($term_group['children'] as $tag) {
+                    $output .= '<div class="tag-category">';
+                    $output .= '<div class="tag-category-parent">' . $tag['parent']->name . '</div>';
                 
-                $output .= '</div>';
+                    foreach ($tag['children'] as $child_index => $child_term) {
+                        $arrow = "";
+                        if (is_numeric($child_term->name)) {
+                            $child_term = get_term($child_term->parent, 'tag_category');
+                            if ($child_index !== array_key_last($tag['children'])) {
+                                $arrow = "<div class='tag-category-arrow'>◂</div>";
+                            }
+                        }
+                        $output .= '<div class="tag-category-child">' . $child_term->name . '</div>' . $arrow;
+                    }
+                    
+                    $output .= '</div>';
+                }
             }
             $output .= '</div>';
             return $output;
