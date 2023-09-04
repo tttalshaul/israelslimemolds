@@ -47,70 +47,52 @@ function inat_taxon_timeline_shortcode($atts) {
     // Generate the timeline HTML
     $timeline_html = '<div class="inat-taxonomy-timeline">';
 
-    // Loop through each month and get counts and total from iNaturalist
-    for ($month = 1; $month <= 12; $month++) {
-        // Make API request to iNaturalist
-        $api_url = 'https://api.inaturalist.org/v1/observations/species_counts';
-        $api_params = array(
-            'taxon_id' => $taxon_id,
-            'interval' => 'month',
-            'month' => $month,
-            'place_id' => '6815',
-        );
-        $api_response = wp_remote_get(add_query_arg($api_params, $api_url));
+    // Make API request to iNaturalist
+    $api_url = 'https://api.inaturalist.org/v1/observations/histogram?place_id=6815&taxon_id=' . $taxon_id;
+    $api_response = wp_remote_get($api_url);
 
-        // Check if API request was successful
-        if (is_wp_error($api_response)) {
-            continue;
-        }
-        
+    // Check if API request was successful
+    if (!is_wp_error($api_response)) {
         // Parse the API response
         $api_data = json_decode(wp_remote_retrieve_body($api_response), true);
+        $months = $api_data['results']['month_of_year'];
 
-        // Determine the count for the current month
-        $count = isset($api_data['results'][0]['count']) ? $api_data['results'][0]['count'] : 0;
-
-        if ($count != 0) {
-            $months[$month] = $count;
-            $count_total += $count;
+        // Sum total
+        for ($month = 1; $month <= 12; $month++) {
+            $count_total += $months[$month];
         }
-    }
 
-    // Loop through each month to build html
-    for ($month = 1; $month <= 12; $month++) {
-        $hebrew_month_name = get_month_name_hebrew($month);
+        // Loop through each month to build html
+        for ($month = 1; $month <= 12; $month++) {
+            $hebrew_month_name = get_month_name_hebrew($month);
 
-        // Calculate the percentage based on the maximum count
-        if ($count_total == 0) {
-            $percentage = 0;
-        }
-        else {
+            // Calculate the percentage based on the maximum count
             $percentage = ($months[$month] / $count_total) * 100;
-        }
 
-        // Determine the color based on the percentage
-        $color = '';
-        $label = '';
-        foreach ($color_ranges as $range_color => $range_data) {
-            if ($percentage >= $range_data['min_percentage'] && $percentage <= $range_data['max_percentage']) {
-                $color = $range_color;
-                $label = $range_data['label'];
-                break;
+            // Determine the color based on the percentage
+            $color = '';
+            $label = '';
+            foreach ($color_ranges as $range_color => $range_data) {
+                if ($percentage >= $range_data['min_percentage'] && $percentage <= $range_data['max_percentage']) {
+                    $color = $range_color;
+                    $label = $range_data['label'];
+                    break;
+                }
             }
-        }
 
-        $first_or_last = '';
-        if ($month == 1) {
-            $first_or_last = 'timeline-item-first';
-        }
-        else if ($month == 12) {
-            $first_or_last = 'timeline-item-last';
-        }
+            $first_or_last = '';
+            if ($month == 1) {
+                $first_or_last = 'timeline-item-first';
+            }
+            else if ($month == 12) {
+                $first_or_last = 'timeline-item-last';
+            }
 
-        // Add the timeline item to the HTML
-        $timeline_html .= '<div class="timeline-item timeline-item-' . $color . ' ' . $first_or_last . '" data-month="' . $hebrew_month_name . '" data-count="' . $months[$month] . '">';
-        $timeline_html .= '<div class="timeline-label">' . $hebrew_month_name . '</div>';
-        $timeline_html .= '</div>';
+            // Add the timeline item to the HTML
+            $timeline_html .= '<div class="timeline-item timeline-item-' . $color . ' ' . $first_or_last . '" data-month="' . $hebrew_month_name . '" data-count="' . $months[$month] . '">';
+            $timeline_html .= '<div class="timeline-label">' . $hebrew_month_name . '</div>';
+            $timeline_html .= '</div>';
+        }
     }
 
     $timeline_html .= '</div>';
