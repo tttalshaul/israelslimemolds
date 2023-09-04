@@ -68,14 +68,14 @@ function display_tag_categories_by_parent_shortcode($atts) {
                 }
 
                 $group_parent_term = get_term($parent_term->parent, 'tag_category');
-                if (!isset($term_group_parents[$group_parent_term->name])) {
+                if (!is_wp_error($group_parent_term) && !isset($term_group_parents[$group_parent_term->name])) {
                     $term_group_parents[$group_parent_term->name] = array(
                         'parent' => array(),
                         'children' => array(),
                     );
                 }
 
-                if (!isset($term_groups[$parent_term->name])) {
+                if (!is_wp_error($group_parent_term) && !is_wp_error($parent_term) && !isset($term_groups[$parent_term->name])) {
                     $term_groups[$parent_term->name] = array(
                         'parent' => $parent_term,
                         'children' => array(),
