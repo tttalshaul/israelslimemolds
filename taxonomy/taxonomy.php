@@ -111,7 +111,7 @@ function custom_species_taxonomy_hierarchy_shortcode() {
                     $post_permalink = get_permalink( $current_post_id );
                     $post_category_name = get_the_category( $current_post_id )[0]->description;
                     if ($post_id !== $current_post_id) {
-                        $taxonomy_hierarchy[] = $hierarchy_spaces . '<a href="' . $post_permalink . '">' . $post_category_name . ': ' . $current_taxonomy->name . '</a>';
+                        $taxonomy_hierarchy[] = $hierarchy_spaces . '<a class="taxonomy_hierarchy_link" href="' . $post_permalink . '">' . $post_category_name . ': ' . $current_taxonomy->name . '</a>';
                     }
                 }
                 else {
@@ -121,7 +121,7 @@ function custom_species_taxonomy_hierarchy_shortcode() {
                 $current_taxonomy = get_term( $current_taxonomy->parent, 'taxonomy' );
                 $has_parent = $current_taxonomy->parent;
             }
-            echo '<p class="taxonomy_hierarchy">היררכיה טקסונומית: <br/>' . implode( '<br/>', $taxonomy_hierarchy ) . '</p>';
+            echo '<p class="taxonomy_hierarchy">היררכיה טקסונומית:<br/>' . implode( '<br/>', $taxonomy_hierarchy ) . '</p>';
         }
     }
 

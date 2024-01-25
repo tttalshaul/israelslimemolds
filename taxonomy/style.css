@@ -40,3 +40,8 @@ a {
     transform: scale(1.1);
     transition: transform 0.3s ease;
 }
+
+/* Hover effect on link */
+.taxonomy_hierarchy_link:hover {
+    text-decoration: underline;
+}
