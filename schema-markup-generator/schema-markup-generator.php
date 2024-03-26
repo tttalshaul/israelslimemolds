@@ -6,12 +6,19 @@ Version: 1.0
 Author: Tal Shaul using ChatGPT
 */
 
+// Helper function to remove Nikud (vowel points) from a Hebrew string
+function markup_remove_nikud( $string ) {
+    // Remove the Nikud (vowel points) from the string using regex
+    // The Unicode range for Hebrew Nikud is U+05B0 to U+05BD
+    return preg_replace('/[^\p{L} ]+/', '', $string);
+}
+
 function generate_schema_markup() {
     if (is_single()) {
         global $post;
 
-        $title = get_the_title($post->ID);
-        $description = get_the_excerpt($post->ID);
+        $title = markup_remove_nikud(get_the_title($post->ID));
+        $description = markup_remove_nikud(get_the_excerpt($post->ID));
 
         $schema_data = array(
             "@context" => "http://schema.org",
