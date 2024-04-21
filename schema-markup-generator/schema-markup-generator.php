@@ -13,12 +13,16 @@ function markup_remove_nikud( $string ) {
     return preg_replace('/[\x{05B0}-\x{05BD}]+/u', '', $string);
 }
 
+function decode_unicode_escape_sequences($input) {
+    return json_decode('"' . $input . '"', true, 512, JSON_UNESCAPED_UNICODE);
+}      
+
 function generate_schema_markup() {
     if (is_single()) {
-        global $post;
+        global $post;  
 
-        $title = markup_remove_nikud(get_the_title($post->ID));
-        $description = markup_remove_nikud(get_the_excerpt($post->ID));
+        $title = decode_unicode_escape_sequences(markup_remove_nikud(get_the_title($post->ID)));
+        $description = decode_unicode_escape_sequences(markup_remove_nikud(get_the_excerpt($post->ID)));
 
         $schema_data = array(
             "@context" => "http://schema.org",
