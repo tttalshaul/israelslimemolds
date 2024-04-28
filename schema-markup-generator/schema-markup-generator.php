@@ -21,8 +21,8 @@ function generate_schema_markup() {
     if (is_single()) {
         global $post;  
 
-        $title = decode_unicode_escape_sequences(markup_remove_nikud(get_the_title($post->ID)));
-        $description = decode_unicode_escape_sequences(markup_remove_nikud(get_the_excerpt($post->ID)));
+        $title = markup_remove_nikud(get_the_title($post->ID));
+        $description = markup_remove_nikud(get_the_excerpt($post->ID));
 
         $schema_data = array(
             "@context" => "http://schema.org",
@@ -39,7 +39,7 @@ function generate_schema_markup() {
         }
 
         // Output the Schema markup
-        $json_data = json_encode($schema_data);
+        $json_data = json_encode($schema_data, JSON_UNESCAPED_UNICODE);
         if ($json_data === false) {
             echo 'JSON encoding error: ' . json_last_error_msg();
         } else {
