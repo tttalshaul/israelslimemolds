@@ -72,13 +72,22 @@ function inaturalist_map_get_data($query) {
 
                     if ($polygon !== null) {
                         // Increment the count for the taxon ID in the polygon
+                        $month_id = substr($result['observed_on'], 5, 2);
                         $area_name = $polygon['name'];
                         if (!isset($areas_with_taxon[$area_name])) {
                             $areas_with_taxon[$area_name] = $polygon;
                             $areas_with_taxon[$area_name]['taxonCount'] = 1;
+                            $areas_with_taxon[$area_name]['taxonCountByMonth'] = [];
+                            $areas_with_taxon[$area_name]['taxonCountByMonth'][$month_id] = 1;
                         }
                         else {
                             $areas_with_taxon[$area_name]['taxonCount']++;
+                            if (!isset($areas_with_taxon[$area_name]['taxonCountByMonth'][$month_id])) {
+                                $areas_with_taxon[$area_name]['taxonCountByMonth'][$month_id] = 1;
+                            }
+                            else {
+                                $areas_with_taxon[$area_name]['taxonCountByMonth'][$month_id]++;
+                            }
                         }
                     }
                 }
