@@ -51,7 +51,7 @@ function generate_schema_markup() {
 add_action('wp_footer', 'generate_schema_markup');
 
 function add_social_meta_tags() {
-    if (is_single() || is_page()) {
+    if (!is_front_page() && !is_home() && (is_single() || is_page())) {
         global $post;
         setup_postdata($post);
 
@@ -63,12 +63,6 @@ function add_social_meta_tags() {
         echo '<meta property="og:description" content="' . esc_attr($og_description) . '">';
         echo '<meta property="og:image" content="' . esc_url($og_image) . '">';
         echo '<meta property="og:url" content="' . esc_url(get_permalink()) . '">';
-    } else {
-        // For the home page or other non-single views
-        echo '<meta property="og:title" content="' . esc_attr(get_bloginfo('name')) . '">';
-        echo '<meta property="og:description" content="' . esc_attr(get_bloginfo('description')) . '">';
-        echo '<meta property="og:image" content="' . esc_url(get_theme_mod('custom_logo')) . '">';
-        echo '<meta property="og:url" content="' . esc_url(home_url('/')) . '">';
     }
 }
 
