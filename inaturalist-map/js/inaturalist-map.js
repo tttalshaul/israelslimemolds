@@ -82,6 +82,10 @@ jQuery(document).ready(function($) {
 
                             polygon.bindPopup(area.name + '<br>' + 'כמה נמצאו: ' + (area.taxonCount ? area.taxonCount : 0));
                         });
+
+                        if (typeof(fillTaxonomyTimeline) != 'undefined') {
+                            fillTaxonomyTimeline($, areas);
+                        }
                     } else {
                         console.error('Error fetching map data: ' + response.data);
                     }
