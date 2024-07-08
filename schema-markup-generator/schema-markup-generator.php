@@ -19,7 +19,8 @@ function decode_unicode_escape_sequences($input) {
 
 function generate_schema_markup() {
     if (is_single()) {
-        global $post;  
+        global $post;
+        global $wp;
 
         $title = markup_remove_nikud(get_the_title($post->ID));
         $description = markup_remove_nikud(get_the_excerpt($post->ID));
@@ -28,7 +29,12 @@ function generate_schema_markup() {
             "@context" => "http://schema.org",
             "@type" => "BlogPosting",
             "headline" => $title,
-            "author" => "SlimeMoldsIsrael",
+            "author" => [array(
+                "@type" => "Person",
+                "name" => "Tal Shaul",
+                "url" => "https://www.facebook.com/profile.php?id=1423542954",
+            )],
+            "url" => add_query_arg( $wp->query_vars, home_url() ),
             "image" => array(),
             "description" => $description,
         );
