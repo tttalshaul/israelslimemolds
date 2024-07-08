@@ -28,6 +28,7 @@ function generate_schema_markup() {
             "@context" => "http://schema.org",
             "@type" => "BlogPosting",
             "headline" => $title,
+            "author" => "SlimeMoldsIsrael",
             "image" => array(),
             "description" => $description,
         );
