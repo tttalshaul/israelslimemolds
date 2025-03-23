@@ -24,5 +24,5 @@ with open('/Users/user/Downloads/myxo_genes.csv', 'w', newline='') as csvfile:
                 full_reference = reference
         title = full_reference.title
         authors = full_reference.authors
-        types = ", ".join([feature.type for feature in gene.features])
+        types = ", ".join(list(set([feature.type for feature in gene.features])))
         gene_writer.writerow([taxon, date, accession, description, title, authors, types])
