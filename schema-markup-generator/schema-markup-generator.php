@@ -15,7 +15,20 @@ function markup_remove_nikud( $string ) {
 
 function decode_unicode_escape_sequences($input) {
     return json_decode('"' . $input . '"', true, 512, JSON_UNESCAPED_UNICODE);
-}      
+}
+
+function get_video_url() {
+    global $post;
+
+    $content = apply_filters('the_content', $post->post_content);
+
+    if (strpos($content, '</video>')) {
+        if (preg_match_all('/<video[^>]+src=["\']([^"\']+)["\']/', $content, $matches_video)) {
+            return $matches_video;
+        }
+    }
+    return FALSE;
+}
 
 function generate_schema_markup() {
     if (is_single()) {
@@ -51,6 +64,27 @@ function generate_schema_markup() {
             echo 'JSON encoding error: ' . json_last_error_msg();
         } else {
             echo '<script type="application/ld+json">' . $json_data . '</script>';
+        }
+
+        $video_url = get_video_url();
+        if ($video_url) {
+            $schema_data = array(
+                "@context" => "http://schema.org",
+                "@type" => "VideoObject",
+                "name" => $title,
+                "description" => $description,
+                "uploadDate" => get_the_modified_date('Y-m-d'),
+                "contentUrl" => $video_url[1][0],
+                "embedUrl" => add_query_arg( $wp->query_vars, home_url() ),
+            );
+
+            $json_data = json_encode($schema_data, JSON_UNESCAPED_UNICODE);
+
+            if ($json_data === false) {
+                echo 'JSON encoding error: ' . json_last_error_msg();
+            } else {
+                echo '<script type="application/ld+json">' . $json_data . '</script>';
+            }
         }
     }
 }
