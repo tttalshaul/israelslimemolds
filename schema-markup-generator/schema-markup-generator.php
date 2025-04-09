@@ -27,7 +27,7 @@ function get_video_url() {
             return $matches_video;
         }
     }
-    return FALSE;
+    return false;
 }
 
 function generate_schema_markup() {
@@ -68,12 +68,22 @@ function generate_schema_markup() {
 
         $video_url = get_video_url();
         if ($video_url) {
+            if (has_post_thumbnail($post->ID)) {
+                $thumb_url = get_the_post_thumbnail_url($post->ID, 'large'); // or 'medium', 'full'
+            }
+            else {
+                $thumb_url = 'https://slimemoldsisrael.byethost7.com/wp-content/uploads/2023/03/whatsapp-image-2023-02-14-at-22.23.07-1.jpeg';
+            }
+
+            $upload_date = get_the_modified_date('Y-m-d\TH:i:sP', $post->ID);
+
             $schema_data = array(
                 "@context" => "http://schema.org",
                 "@type" => "VideoObject",
                 "name" => $title,
                 "description" => $description,
-                "uploadDate" => get_the_modified_date('Y-m-d'),
+                "uploadDate" => $upload_date,
+                "thumbnailUrl" => $thumb_url,
                 "contentUrl" => $video_url[1][0],
                 "embedUrl" => add_query_arg( $wp->query_vars, home_url() ),
             );
