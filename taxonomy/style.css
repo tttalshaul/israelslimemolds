@@ -6,6 +6,14 @@
     line-height: normal;
 }
 
+.tax-description {
+    font-size: 18px;
+    text-align: center;
+    font-family: 'Ubuntu';
+    line-height: normal;
+    height: 65px;
+}
+
 /* Style for the thumbnail container */
 .tax-item {
     display: inline-block;

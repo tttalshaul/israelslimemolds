@@ -155,6 +155,9 @@ function custom_taxonomy_photo_gallery_shortcode() {
                             $thumbnail = get_the_post_thumbnail($current_post_id, 'thumbnail');
                             echo '<div class="tax-thumbnail">' . $thumbnail . '</div>';
                         }
+                        if ($child_term->description !== NULL && trim($child_term->description) !== '') {
+                            echo '<div class="tax-description">' . $child_term->description . '</div>';
+                        }
                         echo '</a></div>';
 
                         // $taxonomy_query_args = array(
