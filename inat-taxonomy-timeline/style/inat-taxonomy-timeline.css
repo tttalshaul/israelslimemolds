@@ -78,4 +78,9 @@
 
 #inat-taxonomy-timeline-canvas {
     background-color: white;
+    width: 100%;
+}
+
+.inat-taxonomy-timeline-by-area {
+    direction: ltr;
 }
