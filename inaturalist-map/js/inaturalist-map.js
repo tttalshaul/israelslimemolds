@@ -14,7 +14,7 @@ jQuery(document).ready(function($) {
             place_id: place_id
         };
 
-        if (place_id == 6815) {
+        if (place_id == 6815 || place_id == 9753) {
             // AJAX request to fetch the map data
             $.ajax({
                 url: inaturalist_map_params.ajax_url,

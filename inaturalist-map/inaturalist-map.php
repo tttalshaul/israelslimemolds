@@ -34,7 +34,7 @@ function inaturalist_map_get_data($query) {
     $place_id = isset($_GET['place_id']) ? intval($_GET['place_id']) : 0;
 
     // Make a request to the iNaturalist API to get the data
-    if ($place_id == 6815) {
+    if ($place_id == 6815 || $place_id == 9753) {
         $api_url = "https://api.inaturalist.org/v1/observations?taxon_id={$taxon_id}&place_id={$place_id}&per_page=200";
     // else {
     //     $api_url = "https://api.inaturalist.org/v1/observations?taxon_id={$taxon_id}&per_page=200";
@@ -163,7 +163,7 @@ function inaturalist_map_shortcode($atts) {
         ), $atts);
 
         ob_start();
-        if ($atts['place_id'] == "6815")
+        if ($atts['place_id'] == "6815" || $atts['place_id'] == "9753")
         {
             ?>
             <div class="inat-map" id="inaturalist-map-<?php echo esc_attr($atts['place_id']); ?>" style="height: 450px;" data-taxon-id="<?php echo esc_attr($atts['taxon_id']); ?>" data-place-id="<?php echo esc_attr($atts['place_id']); ?>"></div>

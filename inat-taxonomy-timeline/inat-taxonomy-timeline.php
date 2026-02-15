@@ -61,7 +61,7 @@ function inat_taxon_area_by_month_shortcode($atts) {
 //     $taxon_id = $_GET['taxon_id'];
 
 //     // Make the API request to iNaturalist using your existing PHP code
-//     $api_url = 'https://api.inaturalist.org/v1/observations/histogram?place_id=6815&taxon_id=' . $taxon_id;
+//     $api_url = 'https://api.inaturalist.org/v1/observations/histogram?place_id=6815,9753&taxon_id=' . $taxon_id;
 //     $api_response = wp_remote_get($api_url);
 
 //     // Check if API request was successful
